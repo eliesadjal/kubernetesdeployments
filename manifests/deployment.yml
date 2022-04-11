@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "backstageaks-4fd4"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "backstageaks-4fd4"
+  template:
+    metadata:
+      labels:
+        app: "backstageaks-4fd4"
+    spec:
+      containers:
+        - name: "backstageaks-4fd4"
+          image: "newacrkube.azurecr.io/backstageaks"
+          ports:
+          - containerPort: 80
