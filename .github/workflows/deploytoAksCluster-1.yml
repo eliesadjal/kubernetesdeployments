@@ -1,0 +1,50 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: newacrkube.azurecr.io
+        username: ${{ secrets.acr_newacrkube_username }}
+        password: ${{ secrets.acr_newacrkube_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/." -f  "packages/backend/Dockerfile" -t newacrkube.azurecr.io/backstageaks:${{ github.sha }} --label dockerfile-path=packages/backend/Dockerfile
+        docker push newacrkube.azurecr.io/backstageaks:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_backstageaks_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep githubactionbackstage | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace githubactionbackstage`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: githubactionbackstage
+        container-registry-url: newacrkube.azurecr.io
+        container-registry-username: ${{ secrets.acr_newacrkube_username }}
+        container-registry-password: ${{ secrets.acr_newacrkube_password }}
+        secret-name: backstageaksdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: githubactionbackstage
+        manifests: |
+          manifests/deployment-1.yml
+          manifests/service-1.yml
+        images: |
+          newacrkube.azurecr.io/backstageaks:${{ github.sha }}
+        imagepullsecrets: |
+          backstageaksdockerauth
