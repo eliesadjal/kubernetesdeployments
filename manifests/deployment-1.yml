@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "backstageaks-e2b6"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "backstageaks-e2b6"
+  template:
+    metadata:
+      labels:
+        app: "backstageaks-e2b6"
+    spec:
+      containers:
+        - name: "backstageaks-e2b6"
+          image: "newacrkube.azurecr.io/backstageaks"
+          ports:
+          - containerPort: 7007
