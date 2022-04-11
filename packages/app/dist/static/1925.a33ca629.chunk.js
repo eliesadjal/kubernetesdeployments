@@ -1,0 +1,3 @@
+"use strict";(()=>{(self.webpackChunkapp=self.webpackChunkapp||[]).push([[1925],{81925:function(e,t,_){_.r(t),_.d(t,{SidebarSearchModal:function(){return o}});var a=_(2784),M=_(21853),D=_(49558),E=_(86607),C=_(30705),d=_(32272),O=_(19126),r=_.n(O),P=_(15277),I=_.n(P),R=_(73495),g=_(34520);const o=n=>{const{state:s,toggleModal:c}=(0,E.u)(),l=n.icon?n.icon:M.Z;return a.createElement(a.Fragment,null,a.createElement(D.R6,{className:"search-icon",icon:l,text:"Search",onClick:c}),a.createElement(E.d,{...s,toggleModal:c}))}}}]);})();
+
+//# sourceMappingURL=1925.a33ca629.chunk.js.map
